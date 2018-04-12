@@ -98,7 +98,7 @@ public class AccessTokenManager {
         params.put("appsecret", "zky winner trafficanalytic system is very powerful and rich");
 
         try {
-            Request request = BaseBuilder.urlPost(mUrl, params).build();
+            Request request = BaseBuilder.urlPostJSON(mUrl, params).build();
             BaseCall.doAsync(request, new IHttpCallBack() {
                 @Override
                 public void onFailure(int errorCode, String message) {

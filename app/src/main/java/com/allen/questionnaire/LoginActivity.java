@@ -1,5 +1,6 @@
 package com.allen.questionnaire;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.RespStudent;
 import com.allen.questionnaire.service.net.CommonRequest;
+import com.allen.questionnaire.utils.SharedPreferenceUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +33,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     ImageButton mBtnClearUserName;
     @BindView(R.id.login_clear_password)
     ImageButton mBtnClearPassword;
+    private SharedPreferenceUtils preferenceUtils;
+    private static final String TOKEN = "token";
+    private String mToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        initData();
         initListener();
+    }
+
+    private void initData() {
+        preferenceUtils = SharedPreferenceUtils.getInstance(this);
+        mToken = preferenceUtils.getPreferenceString(TOKEN,"");
+        if(!TextUtils.isEmpty(mToken)){
+            showHomeActivity();
+            finish();
+        }
     }
 
     private void initListener() {
@@ -117,22 +132,39 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             showToast("请输入密码");
             return;
         }
-        Map<String,String> params = new HashMap<>();
-        params.put("studentId","201495114001");
-        params.put("idNumber","612826199401016541");
+        Map<String, String> params = new HashMap<>();
+        params.put("studentId", userName);
+        params.put("idNumber", passWord);
         IDataCallBack<RespStudent> callback = new IDataCallBack<RespStudent>() {
             @Override
             public void onSuccess(RespStudent result) {
-                    showToast(result.getObject().getId());
+                if (null != result && result.OK()) {
+                    preferenceUtils.setPreference(TOKEN, result.getObject().getId());
+                    showHomeActivity();
+                    finish();
+                } else if (null != result && null != result.getReason()) {
+                    showToast(result.getReason());
+                } else {
+                    showToast("网络请求失败");
+                }
             }
 
             @Override
             public void onError(int errorCode, String errorMessage) {
+                if (TextUtils.isEmpty(errorMessage)) {
+                    errorMessage = "网络请求失败";
+                }
                 showToast(errorMessage);
             }
         };
-        CommonRequest.postLogin(this,"/student/login",this,params,callback);
+        CommonRequest.postLogin(this, "/student/login", this, params, callback);
+    }
 
+    /**
+     * 显示首页Activity
+     */
+    private void showHomeActivity() {
+        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
     }
 
 }

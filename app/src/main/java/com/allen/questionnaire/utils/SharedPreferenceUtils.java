@@ -47,7 +47,8 @@ public class SharedPreferenceUtils {
      */
     public void setPreference(String key, String value) {
         editor.putString(key, value);
-        editor.apply();
+        editor.commit();
+        String string = sharedPreferences.getString(key, "ds");
     }
 
     /**

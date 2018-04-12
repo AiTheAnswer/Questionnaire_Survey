@@ -29,7 +29,7 @@ import okio.Buffer;
  */
 
 public class Util {
-    public static JSONObject HttpParameters2Json(Map<String, Object> map) {
+    public static JSONObject HttpParameters2Json(Map<String, String> map) {
         return new JSONObject(map);
     }
 

@@ -153,7 +153,8 @@ public class CommonRequest {
         }
         final Request request;
         try {
-            Request.Builder builder = BaseBuilder.urlPost(mUrl + url, commonParams(specificParams));
+            Request.Builder builder = BaseBuilder.urlPostJSON(mUrl + url, commonParams(specificParams));
+            builder.addHeader("Content-Type","application/json");
             request = (null != tag) ? builder.tag(tag).build() : builder.build();
         } catch (WinnerException exception) {
             dataCallback.onError(exception.getErrorCode(), exception.getMessage());

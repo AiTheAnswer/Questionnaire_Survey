@@ -9,9 +9,13 @@ import com.allen.questionnaire.service.httputil.util.Util;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by Renjy on 2018/1/30.
@@ -55,7 +59,7 @@ public class BaseBuilder {
      * @return Request的构造者builder
      * @throws WinnerException 拼接时发生异常
      */
-    public static Request.Builder urlPost(String url, Map<String, String> specificParams) throws WinnerException {
+    public static Request.Builder urlPostFormBody(String url, Map<String, String> specificParams) throws WinnerException {
         if (TextUtils.isEmpty(url)) {
             throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);
         } else {
@@ -64,6 +68,7 @@ public class BaseBuilder {
                 throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_PARSE_ERROR);
             }
             okhttp3.FormBody.Builder builder = new okhttp3.FormBody.Builder();
+
             if (specificParams != null && specificParams.size() > 0) {
                 Iterator iterator = specificParams.entrySet().iterator();
                 while (iterator.hasNext()) {
@@ -79,4 +84,18 @@ public class BaseBuilder {
         }
     }
 
+
+    public static Request.Builder urlPostJSON(String url, Map<String, String> specificParams) throws WinnerException {
+        if (TextUtils.isEmpty(url)) {
+            throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);
+        } else {
+            HttpUrl parsed = HttpUrl.parse(url);
+            if (parsed == null) {
+                throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_PARSE_ERROR);
+            }
+            String json = Util.HttpParameters2Json(specificParams).toString();
+            RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+            return (new Request.Builder()).url(url).post(requestBody);
+        }
+    }
 }

@@ -7,12 +7,27 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <com.allen.questionnaire.view.ViewPagerDotsIndicator
         android:id="@+id/view_pager_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="25dp"
-        android:layout_width="match_parent"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/txt_jump_over"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/ui_blue_selector_btn"
         android:gravity="center"
-        android:layout_height="15dp"/>
+        android:text="跳过"
+        android:textColor="@android:color/white" />
+
 
 </RelativeLayout>

@@ -86,8 +86,8 @@ public class ViewPagerDotsIndicator extends RelativeLayout {
     private void init(Context context) {
         this.mContext = context;
         this.mResources = context.getResources();
-        this.mDotRadius = getDp2Px(5);
-        this.mDotMargin = getDp2Px(10);
+        this.mDotRadius = getDp2Px(4);
+        this.mDotMargin = getDp2Px(12);
         mSelectDot = mResources.getDrawable(R.drawable.indicator_selected_dot);
         mUnSelectDot = mResources.getDrawable(R.drawable.indicator_unselected_dot);
         mUnSelectedLayout = new LinearLayout(mContext);

@@ -18,7 +18,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 引导页的Activity
@@ -53,13 +52,6 @@ public class GuideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
-        initData();
-        mViewPager.setAdapter(mAdapter);
-        mViewPagerIndicator.setPagerNumber(mFragments.size(), 0);
-        initListener();
-    }
-
-    private void initData() {
         //验证是否首次进入
         mPreferenceUtils = SharedPreferenceUtils.getInstance(this);
         if (!mPreferenceUtils.getPreferenceBoolean(IS_FIRST, true)) {
@@ -67,6 +59,14 @@ public class GuideActivity extends AppCompatActivity {
             finish();
             return;
         }
+        initData();
+        mViewPager.setAdapter(mAdapter);
+        mViewPagerIndicator.setPagerNumber(mFragments.size(), 0);
+        initListener();
+    }
+
+    private void initData() {
+
         mFragments = new ArrayList<>();
         mFragments.add(GuideFragment.getInstance(R.mipmap.questionnaire_guide1));
         mFragments.add(GuideFragment.getInstance(R.mipmap.questionnaire_guide2));

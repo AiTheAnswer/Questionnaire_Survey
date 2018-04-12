@@ -3,6 +3,7 @@ package com.allen.questionnaire.service.datatrasfer;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.allen.questionnaire.service.exception.ERROR_MESSAGE;
 import com.allen.questionnaire.service.exception.WinnerException;
 import com.allen.questionnaire.service.httputil.BaseBuilder;
 import com.allen.questionnaire.service.httputil.BaseCall;
@@ -66,7 +67,7 @@ public class AccessTokenManager {
     private static String getTokenExpire() {
         if (null == mContext) {
             try {
-                throw WinnerException.getExceptionByCode(1006);
+                throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.TOKEN_MANAGER_NOT_INIT);
             } catch (WinnerException e) {
                 e.printStackTrace();
             }
@@ -86,7 +87,7 @@ public class AccessTokenManager {
     public static void getToken(final IDataCallBack<RespToken> callback) {
         if (null == mUrl || TextUtils.isEmpty(mUrl)) {
             try {
-                throw WinnerException.getExceptionByCode(1006);
+                throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);
             } catch (WinnerException e) {
                 e.printStackTrace();
             }

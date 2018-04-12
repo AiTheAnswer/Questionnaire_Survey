@@ -21,17 +21,40 @@
         android:orientation="vertical">
 
 
-        <EditText
-            android:id="@+id/login_edt_student_id"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:hint="请输入学号"
-            android:layout_marginTop="50dp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@color/grey"
-            android:textSize="16sp" />
+            android:paddingTop="70dp">
+
+            <ImageButton
+                android:id="@+id/temp_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/clear_icon"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/login_edt_student_id"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_toEndOf="@+id/temp_btn1"
+                android:layout_toStartOf="@+id/login_user_name_clear"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="请输入学号"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/grey"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/login_user_name_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/clear_icon"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -39,19 +62,43 @@
             android:layout_marginTop="10dp"
             android:background="@color/grey" />
 
-        <EditText
-            android:id="@+id/login_edt_id_number"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:hint="请输入身份证号"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:textColor="@android:color/black"
-            android:textColorHint="@color/grey"
-            android:textSize="16sp" />
+            android:paddingTop="30dp">
+
+            <ImageButton
+                android:id="@+id/btn_tmp2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/clear_icon"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/login_edt_id_number"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_toEndOf="@+id/btn_tmp2"
+                android:layout_toStartOf="@+id/login_clear_password"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="请输入身份证号"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/grey"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/login_clear_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/clear_icon"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -65,8 +112,8 @@
             android:layout_height="45dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/ui_blue_selector_btn"
-            android:text="登录"
             android:gravity="center"
+            android:text="登录"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

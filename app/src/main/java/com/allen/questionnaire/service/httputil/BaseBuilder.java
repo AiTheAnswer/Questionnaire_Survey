@@ -3,12 +3,14 @@ package com.allen.questionnaire.service.httputil;
 import android.text.TextUtils;
 
 
+import com.allen.questionnaire.service.exception.ERROR_MESSAGE;
 import com.allen.questionnaire.service.exception.WinnerException;
 import com.allen.questionnaire.service.httputil.util.Util;
 
 import java.util.Iterator;
 import java.util.Map;
 
+import okhttp3.HttpUrl;
 import okhttp3.Request;
 
 /**
@@ -24,12 +26,12 @@ public class BaseBuilder {
      *
      * @param url            基本地址
      * @param specificParams Map参数
-     * @return equest的构造者builder
+     * @return request的构造者builder
      * @throws WinnerException 拼接时发生异常
      */
     public static Request.Builder urlGet(String url, Map<String, String> specificParams) throws WinnerException {
         if (TextUtils.isEmpty(url)) {
-            throw WinnerException.getExceptionByCode(1001);
+            throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);
         } else {
             if (specificParams != null && !specificParams.isEmpty()) {
                 url = url + "?" + Util.ConvertMap2HttpParams(Util.encoderName(specificParams));
@@ -55,8 +57,12 @@ public class BaseBuilder {
      */
     public static Request.Builder urlPost(String url, Map<String, String> specificParams) throws WinnerException {
         if (TextUtils.isEmpty(url)) {
-            throw WinnerException.getExceptionByCode(1001);
+            throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);
         } else {
+            HttpUrl parsed = HttpUrl.parse(url);
+            if (parsed == null) {
+                throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_PARSE_ERROR);
+            }
             okhttp3.FormBody.Builder builder = new okhttp3.FormBody.Builder();
             if (specificParams != null && specificParams.size() > 0) {
                 Iterator iterator = specificParams.entrySet().iterator();
@@ -68,7 +74,7 @@ public class BaseBuilder {
                 }
                 return (new Request.Builder()).url(url).post(builder.build());
             } else {
-                throw WinnerException.getExceptionByCode(1003);
+                return (new Request.Builder()).url(url).post(builder.build());
             }
         }
     }

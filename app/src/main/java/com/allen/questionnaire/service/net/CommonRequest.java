@@ -10,19 +10,17 @@ import com.allen.questionnaire.service.cache.db.bean.CacheEntity;
 import com.allen.questionnaire.service.datatrasfer.AccessTokenManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.datatrasfer.WinnerResponse;
+import com.allen.questionnaire.service.exception.ERROR_MESSAGE;
 import com.allen.questionnaire.service.exception.WinnerException;
 import com.allen.questionnaire.service.httputil.BaseBuilder;
 import com.allen.questionnaire.service.httputil.BaseCall;
 import com.allen.questionnaire.service.httputil.Config;
 import com.allen.questionnaire.service.httputil.ExecutorDelivery;
 import com.allen.questionnaire.service.httputil.IHttpCallBack;
-import com.allen.questionnaire.service.model.RespMenuList;
-import com.allen.questionnaire.service.model.RespToken;
-import com.allen.questionnaire.service.model.StoreList;
+import com.allen.questionnaire.service.model.RespStudent;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +76,7 @@ public class CommonRequest {
 
     private Context getApplication() throws WinnerException {
         if (this.mContext == null) {
-            throw WinnerException.getExceptionByCode(1004);
+            throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.COMMON_REQUEST_NOT_INIT);
         } else {
             return this.mContext.getApplicationContext();
         }
@@ -103,11 +101,6 @@ public class CommonRequest {
 
     private static <T extends WinnerResponse> void baseGetRequest(String url, Map<String, String> specificParams, final IDataCallBack<T> callback, final IRequestCallBack<T> successCallBack) {
         final Request request;
-        Map<String, String> params = new HashMap<>();
-        params.put("fcuid", "dd65768b-935f-464c-b4f1-d1421e408c0d");
-        params.put("fcimei", "99000645401857");
-        params.put("from", "android");
-        specificParams.putAll(params);
         try {
             request = BaseBuilder.urlGet(url, commonParams(specificParams)).build();
         } catch (WinnerException exception) {
@@ -140,26 +133,8 @@ public class CommonRequest {
         });
     }
 
-    private static <T extends WinnerResponse> void verifyToken(final Context context, final long cacheTime, final Object tag, final Map<String, String> specificParams, final IDataCallBack<T> dataCallback, final IRequestCallBack<T> successCallBack) {
-        //验证Token是否过期
-        if (!AccessTokenManager.verifyToken()) {
-            AccessTokenManager.getToken(new IDataCallBack<RespToken>() {
-                @Override
-                public void onSuccess(RespToken result) {
-                    basePostRequest(context, cacheTime, tag, specificParams, dataCallback, successCallBack);
-                }
 
-                @Override
-                public void onError(int errorCode, String errorMessage) {
-                    CommonRequest.delivery.postError(errorCode, errorMessage, dataCallback);
-                }
-            });
-        }else{
-            basePostRequest(context, cacheTime, tag, specificParams, dataCallback, successCallBack);
-        }
-    }
-
-    private static <T extends WinnerResponse> void basePostRequest(final Context context, final long cacheTime, final Object tag, final Map<String, String> specificParams, final IDataCallBack<T> dataCallback, final IRequestCallBack<T> successCallBack) {
+    private static <T extends WinnerResponse> void basePostRequest(final Context context, String url, final long cacheTime, final Object tag, final Map<String, String> specificParams, final IDataCallBack<T> dataCallback, final IRequestCallBack<T> successCallBack) {
         //取缓存
         if (cacheTime > 0) {
             CacheEntity cache = getCache(cacheTime, specificParams);
@@ -178,10 +153,7 @@ public class CommonRequest {
         }
         final Request request;
         try {
-            Request.Builder builder = BaseBuilder.urlPost(mUrl, commonParams(specificParams));
-            //在Header中添加Token
-            builder.addHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .addHeader("WinnerAuth", AccessTokenManager.getAccessToken());
+            Request.Builder builder = BaseBuilder.urlPost(mUrl + url, commonParams(specificParams));
             request = (null != tag) ? builder.tag(tag).build() : builder.build();
         } catch (WinnerException exception) {
             dataCallback.onError(exception.getErrorCode(), exception.getMessage());
@@ -223,96 +195,27 @@ public class CommonRequest {
         return cache;
     }
 
-    /**
-     * 上传文件
-     *
-     * @param actionUrl 上传文件的url
-     * @param filePath  上传文件的路径
-     * @param callback  上传结果的回调
-     */
-    public static void uploadFile(String actionUrl, String filePath, IDataCallBack<WinnerResponse> callback) throws Exception {
-        //补全请求地址
-        String requestUrl = mUrl + actionUrl;
-        //创建File
-        File file = new File(filePath);
-        if (file.exists()) {
-            throw new Exception("文件不存在");
-        }
-
-
-    }
 
     /**
-     * get 方式获取场所列表
+     * 登录
      *
-     * @param specificParams
-     * @param callback
+     * @param context 上下文
+     * @param url  url地址
+     * @param tag 标识
+     * @param specificParams 参数
+     * @param callback 回调
      */
-    public static void getUserSiteListByTypeForTodayInspected(Map<String, String> specificParams, IDataCallBack<StoreList> callback) {
-
-        baseGetRequest(mUrl, specificParams, callback, new CommonRequest.IRequestCallBack<StoreList>() {
-            public StoreList success(String responseStr) throws Exception {
-                Type listType = new TypeToken<StoreList>() {
-                }.getType();
-                Gson gson = new Gson();
-                StoreList storeList;
-                storeList = gson.fromJson(responseStr, listType);
-                return storeList;
-            }
-        });
-    }
-
-    /**
-     * post 方式获取场所列表
-     *
-     * @param specificParams
-     * @param callback
-     */
-    public static void postUserSiteListByTypeForTodayInspected(Context context, Object tag, Map<String, String> specificParams, final IDataCallBack<StoreList> callback) {
-        Map<String, String> params = new HashMap<>();
-        params.put("fcuid", "dd65768b-935f-464c-b4f1-d1421e408c0d");
-        params.put("fcimei", "99000645401857");
-        params.put("from", "android");
-        params.put("action", "getUserSiteListByTypeForTodayInspected");
-        specificParams.putAll(params);
-        verifyToken(context, 0, tag, specificParams, callback, new IRequestCallBack<StoreList>() {
+    public static void postLogin(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespStudent> callback) {
+        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespStudent>() {
             @Override
-            public StoreList success(String responseStr) throws Exception {
-                Type listType = new TypeToken<StoreList>() {
+            public RespStudent success(String responseStr) throws Exception {
+                Type listType = new TypeToken<RespStudent>() {
                 }.getType();
                 Gson gson = new Gson();
-                StoreList storeList = gson.fromJson(responseStr, listType);
-                return storeList;
+                RespStudent respStudent = gson.fromJson(responseStr, listType);
+                return respStudent;
             }
         });
     }
-
-    /**
-     * 获取菜单列表
-     *
-     * @param context        上下文
-     * @param tag            标识，用于cancel
-     * @param specificParams 参数集合
-     * @param callback       结果的回调
-     */
-    public static void postMenuList(Context context, Object tag, Map<String, String> specificParams, final IDataCallBack<RespMenuList> callback) {
-        Map<String, String> params = new HashMap<>();
-        params.put("fcuid", "dd65768b-935f-464c-b4f1-d1421e408c0d");
-        params.put("fcimei", "A0000059FF25FC");
-        params.put("from", "android");
-        params.put("action", "getMenuList");
-        specificParams.putAll(params);
-        verifyToken(context, 0, tag, specificParams, callback, new IRequestCallBack<RespMenuList>() {
-            @Override
-            public RespMenuList success(String responseStr) throws Exception {
-                Type listType = new TypeToken<RespMenuList>() {
-                }.getType();
-                Gson gson = new Gson();
-                RespMenuList menuList = gson.fromJson(responseStr, listType);
-                return menuList;
-            }
-        });
-    }
-
 
 }

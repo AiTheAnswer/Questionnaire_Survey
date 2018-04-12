@@ -1,7 +1,10 @@
 package com.allen.questionnaire.service.datatrasfer;
 
+
 /**
- * Created by Allen on 2018/1/30.
+ * 请求结果的回调
+ *
+ * 实体类
  */
 
 public interface IDataCallBack<T extends WinnerResponse> {

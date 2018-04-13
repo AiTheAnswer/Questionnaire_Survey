@@ -1,4 +1,4 @@
-package com.allen.questionnaire;
+package com.allen.questionnaire.activity;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;

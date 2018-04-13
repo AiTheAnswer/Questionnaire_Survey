@@ -1,4 +1,4 @@
-package com.allen.questionnaire;
+package com.allen.questionnaire.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.allen.questionnaire.R;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.RespStudent;
 import com.allen.questionnaire.service.net.CommonRequest;

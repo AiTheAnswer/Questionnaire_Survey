@@ -1,4 +1,4 @@
-package com.allen.questionnaire;
+package com.allen.questionnaire.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.allen.questionnaire.R;
 import com.allen.questionnaire.adapter.ViewPagerAdapter;
 import com.allen.questionnaire.fragment.GuideFragment;
 import com.allen.questionnaire.utils.SharedPreferenceUtils;

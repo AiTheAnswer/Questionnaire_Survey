@@ -1,14 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.allen.questionnaire.HomeActivity">
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="首页" />
-</RelativeLayout>
+    <FrameLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/grey" />
+
+    <!-- 底部布局-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:orientation="horizontal">
+        <!-- 问卷 -->
+        <RelativeLayout
+            android:id="@+id/layout_questionnaire"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/btn_questionnaire"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ui_btn_questionnaire_selector"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/txt_questionnaire"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal|bottom"
+                android:text="问卷"
+                android:textColor="@color/home_un_select"
+                android:textSize="12sp" />
+        </RelativeLayout>
+        <!-- 分析 -->
+        <RelativeLayout
+            android:id="@+id/layout_analysis"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/btn_analysis"
+                android:layout_width="30dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/ui_btn_analysis_selector"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/txt_analysis"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="分析"
+                android:gravity="center_horizontal|bottom"
+                android:textColor="@color/home_un_select"
+                android:textSize="12sp" />
+        </RelativeLayout>
+        <!-- 我的 -->
+        <RelativeLayout
+            android:id="@+id/layout_me"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/btn_me"
+                android:layout_width="30dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/ui_btn_me_selector"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/txt_me"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="我的"
+                android:gravity="center_horizontal|bottom"
+                android:textColor="@color/home_un_select"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

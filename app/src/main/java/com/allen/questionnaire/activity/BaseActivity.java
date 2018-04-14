@@ -23,7 +23,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void showToast(String message) {
+    public void showToast(String message) {
         if (TextUtils.isEmpty(message)) {
             return;
         }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+    <!-- 标题、是否使用-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/txt_item_que_name"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:textColor="@color/black_88000000"
+            android:textSize="16sp" />
+        <!-- 是否填写 -->
+        <TextView
+            android:id="@+id/txt_item_que_use"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:text="已填写"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- 使用次数、问题个数-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:paddingRight="25dp">
+
+            <TextView
+                android:id="@+id/txt_item_use_number_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="使用次数: "
+                android:textColor="@color/home_un_select"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/txt_item_use_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/txt_item_use_number_name"
+                android:textColor="@color/home_select"
+                android:gravity="bottom"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txt_item_que_number_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="问题个数: "
+                android:textColor="@color/home_un_select"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/txt_item_que_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@+id/txt_item_que_number_name"
+                android:gravity="bottom"
+                android:textColor="@color/home_select"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

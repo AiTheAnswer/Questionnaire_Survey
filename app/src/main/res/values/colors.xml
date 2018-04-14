@@ -6,4 +6,7 @@
     <color name="grey">#999999</color>
     <color name="home_select">#F86442</color>
     <color name="home_un_select">#707788</color>
+    <color name="gory">#f3f3f3</color>
+    <color name="grey_f0f0f0">#f9f9f9</color>
+    <color name="black_88000000">#88000000</color>
 </resources>

@@ -17,6 +17,8 @@ import com.allen.questionnaire.service.httputil.BaseCall;
 import com.allen.questionnaire.service.httputil.Config;
 import com.allen.questionnaire.service.httputil.ExecutorDelivery;
 import com.allen.questionnaire.service.httputil.IHttpCallBack;
+import com.allen.questionnaire.service.model.RespCategoryList;
+import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.model.RespStudent;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -219,4 +221,45 @@ public class CommonRequest {
         });
     }
 
+    /**
+     * 获取问卷类别集合
+     * @param context 上下文
+     * @param url  地址
+     * @param tag 标识
+     * @param specificParams 参数
+     * @param callback 回调
+     */
+    public static void postCategoryList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespCategoryList> callback) {
+        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespCategoryList>() {
+            @Override
+            public RespCategoryList success(String responseStr) throws Exception {
+                Type listType = new TypeToken<RespCategoryList>() {
+                }.getType();
+                Gson gson = new Gson();
+                RespCategoryList categoryList = gson.fromJson(responseStr, listType);
+                return categoryList;
+            }
+        });
+    }
+
+    /**
+     * 获取问卷集合
+     * @param context 上下文
+     * @param url url地址
+     * @param tag 标识
+     * @param specificParams 参数
+     * @param callback 回调
+     */
+      public static void postQuestionnaireList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQuestionnaireList> callback) {
+          basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespQuestionnaireList>() {
+              @Override
+              public RespQuestionnaireList success(String responseStr) throws Exception {
+                  Type listType = new TypeToken<RespQuestionnaireList>() {
+                  }.getType();
+                  Gson gson = new Gson();
+                  RespQuestionnaireList questionnaireList = gson.fromJson(responseStr, listType);
+                  return questionnaireList;
+              }
+          });
+      }
 }

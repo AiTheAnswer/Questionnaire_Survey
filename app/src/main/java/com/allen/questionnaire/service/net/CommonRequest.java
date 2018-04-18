@@ -18,8 +18,10 @@ import com.allen.questionnaire.service.httputil.Config;
 import com.allen.questionnaire.service.httputil.ExecutorDelivery;
 import com.allen.questionnaire.service.httputil.IHttpCallBack;
 import com.allen.questionnaire.service.model.RespCategoryList;
+import com.allen.questionnaire.service.model.RespQueDetail;
 import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.model.RespStudent;
+import com.allen.questionnaire.service.model.Test;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -156,7 +158,7 @@ public class CommonRequest {
         final Request request;
         try {
             Request.Builder builder = BaseBuilder.urlPostJSON(mUrl + url, commonParams(specificParams));
-            builder.addHeader("Content-Type","application/json");
+            builder.addHeader("Content-Type", "application/json");
             request = (null != tag) ? builder.tag(tag).build() : builder.build();
         } catch (WinnerException exception) {
             dataCallback.onError(exception.getErrorCode(), exception.getMessage());
@@ -202,11 +204,11 @@ public class CommonRequest {
     /**
      * 登录
      *
-     * @param context 上下文
-     * @param url  url地址
-     * @param tag 标识
+     * @param context        上下文
+     * @param url            url地址
+     * @param tag            标识
      * @param specificParams 参数
-     * @param callback 回调
+     * @param callback       回调
      */
     public static void postLogin(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespStudent> callback) {
         basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespStudent>() {
@@ -223,11 +225,12 @@ public class CommonRequest {
 
     /**
      * 获取问卷类别集合
-     * @param context 上下文
-     * @param url  地址
-     * @param tag 标识
+     *
+     * @param context        上下文
+     * @param url            地址
+     * @param tag            标识
      * @param specificParams 参数
-     * @param callback 回调
+     * @param callback       回调
      */
     public static void postCategoryList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespCategoryList> callback) {
         basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespCategoryList>() {
@@ -244,22 +247,47 @@ public class CommonRequest {
 
     /**
      * 获取问卷集合
+     *
+     * @param context        上下文
+     * @param url            url地址
+     * @param tag            标识
+     * @param specificParams 参数
+     * @param callback       回调
+     */
+    public static void postQuestionnaireList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQuestionnaireList> callback) {
+        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespQuestionnaireList>() {
+            @Override
+            public RespQuestionnaireList success(String responseStr) throws Exception {
+                Type listType = new TypeToken<RespQuestionnaireList>() {
+                }.getType();
+                Gson gson = new Gson();
+                RespQuestionnaireList questionnaireList = gson.fromJson(responseStr, listType);
+                return questionnaireList;
+            }
+        });
+    }
+
+    /**
+     * 获取某一问卷的问题和选项
+     *
      * @param context 上下文
      * @param url url地址
      * @param tag 标识
-     * @param specificParams 参数
+     * @param specificParams 参数集合
      * @param callback 回调
      */
-      public static void postQuestionnaireList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQuestionnaireList> callback) {
-          basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespQuestionnaireList>() {
-              @Override
-              public RespQuestionnaireList success(String responseStr) throws Exception {
-                  Type listType = new TypeToken<RespQuestionnaireList>() {
-                  }.getType();
-                  Gson gson = new Gson();
-                  RespQuestionnaireList questionnaireList = gson.fromJson(responseStr, listType);
-                  return questionnaireList;
-              }
-          });
-      }
+    public static void getQuestionAddOptions(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<Test> callback) {
+        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<Test>() {
+            @Override
+            public Test success(String responseStr) throws Exception {
+                Type listType = new TypeToken<Test>() {
+                }.getType();
+                Gson gson = new Gson();
+                Test questionnaireList = gson.fromJson(responseStr, listType);
+
+                return questionnaireList;
+            }
+        });
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.allen.questionnaire.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,10 +8,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.allen.questionnaire.MyApplication;
 import com.allen.questionnaire.R;
+import com.allen.questionnaire.activity.AnswerActivity;
 import com.allen.questionnaire.activity.HomeActivity;
 import com.allen.questionnaire.adapter.QuestionnaireListAdapter;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
@@ -20,7 +23,6 @@ import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.allen.questionnaire.utils.Constant;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * 问卷没一个类别展示的Fragment
+ * 问卷每一个类别展示的Fragment
  */
 
 public class QuestionnaireFragment extends Fragment {
@@ -50,8 +52,11 @@ public class QuestionnaireFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_question, null);
         unbinder = ButterKnife.bind(this, view);
         initData();
+        initListener();
         return view;
     }
+
+
 
     @Override
     public void onStart() {
@@ -62,8 +67,6 @@ public class QuestionnaireFragment extends Fragment {
     private void initData() {
         mActivity = (HomeActivity) getActivity();
         myApplication = (MyApplication) mActivity.getApplication();
-
-
     }
 
     public void setData(Category category) {
@@ -77,7 +80,6 @@ public class QuestionnaireFragment extends Fragment {
         Map<String, String> params = new HashMap<>();
         params.put(Constant.TOKEN, myApplication.getToken());
         params.put("categoryId",  mCategory.getId()+"");
-
         IDataCallBack<RespQuestionnaireList> callback = new IDataCallBack<RespQuestionnaireList>() {
             @Override
             public void onSuccess(RespQuestionnaireList result) {
@@ -113,6 +115,18 @@ public class QuestionnaireFragment extends Fragment {
     private void updateQuestionnaire() {
         mAdapter = new QuestionnaireListAdapter(mActivity, mQuestionnaireList);
         mListView.setAdapter(mAdapter);
+    }
+    private void initListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Questionnaire questionnaire = mQuestionnaireList.get(position);
+                Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                intent.putExtra("questionnaire",questionnaire);
+                startActivity(intent);
+
+            }
+        });
     }
 
     @Override

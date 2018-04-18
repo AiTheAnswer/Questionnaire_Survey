@@ -1,12 +1,14 @@
 package com.allen.questionnaire.service.model;
 
+import java.io.Serializable;
+
 /**
  *  问卷的实体类
  *
  *  @author  Renjy
  */
 
-public class Questionnaire {
+public class Questionnaire implements Serializable{
     //问卷id
     private String id;
     //问卷名称

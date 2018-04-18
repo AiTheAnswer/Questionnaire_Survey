@@ -78,8 +78,7 @@ public class QuestionnairesFragment extends Fragment {
 
         IDataCallBack<RespCategoryList> callback = new IDataCallBack<RespCategoryList>() {
             @Override
-            public void onSuccess(RespCategoryList result) {
-                if (null != result && result.OK()) {
+            public void onSuccess(RespCategoryList result) {if (null != result && result.OK()) {
                     ArrayList<Category> resultObject = result.getObject();
                     if (null != resultObject && resultObject.size() > 0) {
                         mCategoryList = resultObject;

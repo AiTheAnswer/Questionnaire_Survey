@@ -17,11 +17,11 @@ import com.allen.questionnaire.service.httputil.BaseCall;
 import com.allen.questionnaire.service.httputil.Config;
 import com.allen.questionnaire.service.httputil.ExecutorDelivery;
 import com.allen.questionnaire.service.httputil.IHttpCallBack;
+import com.allen.questionnaire.service.model.Resp;
 import com.allen.questionnaire.service.model.RespCategoryList;
-import com.allen.questionnaire.service.model.RespQueDetail;
+import com.allen.questionnaire.service.model.RespQueDetailObject;
 import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.model.RespStudent;
-import com.allen.questionnaire.service.model.Test;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,6 +31,8 @@ import java.util.Map;
 
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static com.alibaba.fastjson.JSON.parseObject;
 
 /**
  * Created by Allen on 2018/1/30.
@@ -276,16 +278,11 @@ public class CommonRequest {
      * @param specificParams 参数集合
      * @param callback 回调
      */
-    public static void getQuestionAddOptions(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<Test> callback) {
-        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<Test>() {
+    public static void getQuestionAddOptions(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQueDetailObject> callback) {
+        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespQueDetailObject>() {
             @Override
-            public Test success(String responseStr) throws Exception {
-                Type listType = new TypeToken<Test>() {
-                }.getType();
-                Gson gson = new Gson();
-                Test questionnaireList = gson.fromJson(responseStr, listType);
-
-                return questionnaireList;
+            public RespQueDetailObject success(String responseStr)  {
+                return parseObject(responseStr,RespQueDetailObject.class);
             }
         });
     }

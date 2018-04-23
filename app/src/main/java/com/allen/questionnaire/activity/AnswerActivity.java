@@ -11,15 +11,12 @@ import android.widget.TextView;
 
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
-import com.allen.questionnaire.service.model.QuestionAddOptions;
 import com.allen.questionnaire.service.model.Questionnaire;
-import com.allen.questionnaire.service.model.RespQueDetail;
-import com.allen.questionnaire.service.model.Test;
+import com.allen.questionnaire.service.model.RespQueDetailObject;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.allen.questionnaire.utils.SharedPreferenceUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -90,12 +87,10 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
         Map<String, String> params = new HashMap<>();
         params.put("token",mToken);
         params.put("questionnaireId",mQuestionnaire.getId());
-        IDataCallBack<Test> callback = new IDataCallBack<Test>() {
+        IDataCallBack<RespQueDetailObject> callback = new IDataCallBack<RespQueDetailObject>() {
             @Override
-            public void onSuccess(Test result) {
-                List<Test.QuesDetailBean> resultQuesDetail = result.getQuesDetail();
+            public void onSuccess(RespQueDetailObject result) {
                 updateFragment(result);
-
             }
 
             @Override
@@ -110,7 +105,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
      * 根据
      * @param result
      */
-    private void updateFragment(Test result) {
+    private void updateFragment(RespQueDetailObject result) {
     }
 
     @Override

@@ -1,12 +1,9 @@
 package com.allen.questionnaire.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,12 +11,12 @@ import android.widget.TextView;
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.fragment.AnalysisFragment;
 import com.allen.questionnaire.fragment.MeFragment;
-import com.allen.questionnaire.fragment.QuestionnaireFragment;
+import com.allen.questionnaire.fragment.QuestionnairesFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.txt_questionnaire)
     TextView mTxtQuestionnaire;
@@ -41,11 +38,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     View mBtnMe;
     @BindView(R.id.layout_content)
     FrameLayout mLayoutContent;
+    @BindView(R.id.txt_title)
+    TextView mTxtTitle;
 
     /**
      * 问卷Fragment
      */
-    private QuestionnaireFragment questionnaireFragment;
+    private QuestionnairesFragment questionnaireFragment;
     /**
      * 分析Fragment
      */
@@ -79,7 +78,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-        questionnaireFragment = new QuestionnaireFragment();
+        mBtnQuestionnaire.setSelected(true);
+        mTxtQuestionnaire.setTextColor(getResources().getColor(R.color.home_select));
+        mTxtTitle.setText("问卷");
+        questionnaireFragment = new QuestionnairesFragment();
         analysisFragment = new AnalysisFragment();
         meFragment = new MeFragment();
         fragmentManager = getSupportFragmentManager();
@@ -111,12 +113,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (mCurrentType) {
             case TYPE_QUESTIONNAIRE://问卷
                 fragmentTransaction.show(questionnaireFragment);
+                mTxtTitle.setText("问卷");
+                mTxtTitle.setVisibility(View.VISIBLE);
                 break;
             case TYPE_ANALYSIS://分析
                 fragmentTransaction.show(analysisFragment);
+                mTxtTitle.setText("分析");
+                mTxtTitle.setVisibility(View.VISIBLE);
                 break;
             case TYPE_ME://我
                 fragmentTransaction.show(meFragment);
+                mTxtTitle.setVisibility(View.GONE);
                 break;
             default:
                 fragmentTransaction.show(questionnaireFragment);

@@ -11,14 +11,17 @@ import com.allen.questionnaire.R;
 
 /**
  * 分析Fragment
+ *
+ * @author Renjy
  */
 
 public class AnalysisFragment extends Fragment {
     private View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_analysis,null);
+        view = inflater.inflate(R.layout.fragment_analysis, null);
         return view;
     }
 }

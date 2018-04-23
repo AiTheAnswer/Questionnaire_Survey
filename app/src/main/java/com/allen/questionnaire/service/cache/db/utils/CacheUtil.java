@@ -3,7 +3,6 @@ package com.allen.questionnaire.service.cache.db.utils;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-
 import com.allen.questionnaire.service.cache.db.CacheEntityDao;
 import com.allen.questionnaire.service.cache.db.DaoMaster;
 import com.allen.questionnaire.service.cache.db.DaoSession;

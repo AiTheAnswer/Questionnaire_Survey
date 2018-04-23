@@ -6,20 +6,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="15dp">
+       >
 
         <TextView
             android:id="@+id/txt_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginBottom="8dp"
             android:textSize="16sp" />
 
-        <ListView
+        <com.allen.questionnaire.view.ListViewForScrollView
             android:id="@+id/lv_option"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:listSelector="@drawable/lst_selector"
+            android:divider="@null"
             android:layout_marginTop="20dp" />
     </LinearLayout>
 </ScrollView>

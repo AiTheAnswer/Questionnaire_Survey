@@ -9,6 +9,7 @@ package com.allen.questionnaire.service.model;
 public class Option {
     private Long id;
     private String optionDes;
+    private boolean isSelect;
 
     public Long getId() {
         return id;
@@ -24,5 +25,13 @@ public class Option {
 
     public void setOptionDes(String optionDes) {
         this.optionDes = optionDes;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
     }
 }

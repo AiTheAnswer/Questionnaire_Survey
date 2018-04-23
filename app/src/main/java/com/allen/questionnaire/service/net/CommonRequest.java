@@ -17,7 +17,6 @@ import com.allen.questionnaire.service.httputil.BaseCall;
 import com.allen.questionnaire.service.httputil.Config;
 import com.allen.questionnaire.service.httputil.ExecutorDelivery;
 import com.allen.questionnaire.service.httputil.IHttpCallBack;
-import com.allen.questionnaire.service.model.Resp;
 import com.allen.questionnaire.service.model.RespCategoryList;
 import com.allen.questionnaire.service.model.RespQueDetailObject;
 import com.allen.questionnaire.service.model.RespQuestionnaireList;

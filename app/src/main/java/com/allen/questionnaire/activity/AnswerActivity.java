@@ -7,12 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.adapter.ViewPagerAdapter;
 import com.allen.questionnaire.fragment.AnswerFragment;
+import com.allen.questionnaire.fragment.AnswerSheetFragment;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.QuestionAddOptions;
 import com.allen.questionnaire.service.model.Questionnaire;
@@ -42,14 +42,6 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
     ImageView mImgBack;
     @BindView(R.id.txt_title)
     TextView mTxtTitle;
-    @BindView(R.id.txt_questionnaire_type)
-    TextView mTxtQuestionnaireType;
-    @BindView(R.id.txt_progress)
-    TextView mTxtProgress;
-    @BindView(R.id.img_answer)
-    ImageView mImgAnswer;
-    @BindView(R.id.layout_progress)
-    RelativeLayout mLayoutProgress;
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
     @BindView(R.id.txt_previous_question)
@@ -58,6 +50,8 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
     TextView mTxtNextQuestion;
     @BindView(R.id.layout_page_turning)
     LinearLayout mLayoutPageTurning;
+    @BindView(R.id.txt_commit_answer)
+    TextView mTxtCommitAnswer;
     private SharedPreferenceUtils mPreferenceUtils;
     private Questionnaire mQuestionnaire;
     private String mToken = "";
@@ -89,6 +83,16 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
+                if (position == mFragments.size() - 1) {//答题卡
+                    AnswerSheetFragment sheetFragment = (AnswerSheetFragment) mFragments.get(mFragments.size() - 1);
+                    sheetFragment.updateData();
+                    mLayoutPageTurning.setVisibility(View.GONE);
+                    mTxtCommitAnswer.setVisibility(View.VISIBLE);
+                    return;
+                } else {
+                    mLayoutPageTurning.setVisibility(View.VISIBLE);
+                    mTxtCommitAnswer.setVisibility(View.GONE);
+                }
                 if (position == 0) {
                     mTxtPreviousQuestion.setTextColor(getResources().getColor(R.color.grey));
                     mTxtPreviousQuestion.setClickable(false);
@@ -96,7 +100,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
                     mTxtPreviousQuestion.setTextColor(getResources().getColor(R.color.white));
                     mTxtPreviousQuestion.setClickable(true);
                 }
-                if (position == mFragments.size() - 1) {
+                if (position == mFragments.size() - 2) {
                     mTxtNextQuestion.setTextColor(getResources().getColor(R.color.grey));
                     mTxtNextQuestion.setClickable(false);
                 } else {
@@ -104,9 +108,6 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
                     mTxtNextQuestion.setClickable(true);
                 }
                 mCurrentPage = position;
-                AnswerFragment fragment = (AnswerFragment) mFragments.get(position);
-                setQueType(fragment.getQueType());
-                mTxtProgress.setText(++position + "/" + mAdapter.getCount());
             }
 
             @Override
@@ -159,19 +160,35 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
         List<QuestionAddOptions> quesDetail = respQueDetail.getQuesDetail();
-        for (QuestionAddOptions questionAddOptions : quesDetail) {
+        for (int i = 0; i < quesDetail.size(); i++) {
+            QuestionAddOptions questionAddOptions = quesDetail.get(i);
             AnswerFragment answerFragment = new AnswerFragment();
-            answerFragment.setData(questionAddOptions);
+            String progress = formatProgress(i + 1, quesDetail.size());
+            answerFragment.setData(progress, questionAddOptions);
             mFragments.add(answerFragment);
         }
         if (mFragments.size() > 0) {
+            //添加选项卡
+            AnswerSheetFragment sheetFragment = new AnswerSheetFragment();
+            sheetFragment.setData(quesDetail);
+            mFragments.add(sheetFragment);
+            //设置初始问题类型 和当前进度
             AnswerFragment fragment = (AnswerFragment) mFragments.get(0);
-            setQueType(fragment.getQueType());
-            mTxtProgress.setText(1 + "/" + mFragments.size());
         }
         mViewPager.setOffscreenPageLimit(mFragments.size());
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mAdapter);
+    }
+
+    /**
+     * 进度格式化
+     *
+     * @param progress 进度
+     * @param total    总数
+     * @return 格式化的数值
+     */
+    private String formatProgress(int progress, int total) {
+        return String.format("%s", progress + "/" + total);
     }
 
     @Override
@@ -190,19 +207,6 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     /**
-     * 设置问题类型 0： 单选 1： 多选
-     *
-     * @param type 类型
-     */
-    public void setQueType(Integer type) {
-        if (type == 0) {
-            mTxtQuestionnaireType.setText("单选题");
-        } else {
-            mTxtQuestionnaireType.setText("多选题");
-        }
-    }
-
-    /**
      * 切换到下一个问题
      */
     public void nextQuestion() {
@@ -215,8 +219,15 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
      * @param page 指定页
      */
     public void setCurrentPage(int page) {
-        if (page > 0 && page < mAdapter.getCount()) {
+        if (page >= 0 && page < mAdapter.getCount()) {
             mViewPager.setCurrentItem(page);
         }
+    }
+
+    /**
+     * 显示答题卡Fragment
+     */
+    public void showAnswerFragment() {
+        mViewPager.setCurrentItem(mAdapter.getCount() - 1);
     }
 }

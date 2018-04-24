@@ -56,11 +56,12 @@ public class QuestionnaireFragment extends Fragment {
         return view;
     }
 
-
-
     @Override
     public void onStart() {
         super.onStart();
+        if(mCategory == null ){
+            return;
+        }
         getQuestionList();
     }
 

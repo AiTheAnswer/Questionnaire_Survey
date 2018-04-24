@@ -78,24 +78,25 @@ public class QuestionnairesFragment extends Fragment {
 
         IDataCallBack<RespCategoryList> callback = new IDataCallBack<RespCategoryList>() {
             @Override
-            public void onSuccess(RespCategoryList result) {if (null != result && result.OK()) {
+            public void onSuccess(RespCategoryList result) {
+                if (null != result && result.OK()) {
                     ArrayList<Category> resultObject = result.getObject();
                     if (null != resultObject && resultObject.size() > 0) {
                         mCategoryList = resultObject;
                         updateTab();
-                    }else{
+                    } else {
                         //TODO 暂无数据
                     }
-                }else if(null != result && !TextUtils.isEmpty(result.getReason())){
+                } else if (null != result && !TextUtils.isEmpty(result.getReason())) {
                     mActivity.showToast(result.getReason());
-                }else{
+                } else {
                     mActivity.showToast(Constant.NET_ERROR);
                 }
             }
 
             @Override
             public void onError(int errorCode, String errorMessage) {
-                if(TextUtils.isEmpty(errorMessage)){
+                if (TextUtils.isEmpty(errorMessage)) {
                     errorMessage = Constant.NET_ERROR;
                 }
                 mActivity.showToast(errorMessage);
@@ -108,12 +109,12 @@ public class QuestionnairesFragment extends Fragment {
      * 更新TabLayout
      */
     private void updateTab() {
-        for (Category category: mCategoryList) {
+        for (Category category : mCategoryList) {
             QuestionnaireFragment questionFragment = new QuestionnaireFragment();
             questionFragment.setData(category);
             mFragments.add(questionFragment);
         }
-        mAdapter = new ViewPagerAdapter(mActivity.getSupportFragmentManager(),mFragments);
+        mAdapter = new ViewPagerAdapter(mActivity.getSupportFragmentManager(), mFragments);
         mAdapter.setCategories(mCategoryList);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);

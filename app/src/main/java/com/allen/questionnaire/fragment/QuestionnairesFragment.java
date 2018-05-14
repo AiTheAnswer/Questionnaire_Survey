@@ -14,6 +14,7 @@ import com.allen.questionnaire.MyApplication;
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.activity.HomeActivity;
 import com.allen.questionnaire.adapter.ViewPagerAdapter;
+import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.Category;
 import com.allen.questionnaire.service.model.RespCategoryList;
@@ -102,7 +103,7 @@ public class QuestionnairesFragment extends Fragment {
                 mActivity.showToast(errorMessage);
             }
         };
-        CommonRequest.postCategoryList(getActivity(), "/category/getCategoryList", getActivity(), params, callback);
+        ApiManager.postCategoryList(getActivity(), "/category/getCategoryList", getActivity(), params, callback);
     }
 
     /**

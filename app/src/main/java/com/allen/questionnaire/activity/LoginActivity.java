@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.allen.questionnaire.R;
+import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.RespStudent;
 import com.allen.questionnaire.service.net.CommonRequest;
@@ -158,7 +159,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 showToast(errorMessage);
             }
         };
-        CommonRequest.postLogin(this, "/student/login", this, params, callback);
+        ApiManager.postLogin(this, "/student/login", this, params, callback);
     }
 
     /**

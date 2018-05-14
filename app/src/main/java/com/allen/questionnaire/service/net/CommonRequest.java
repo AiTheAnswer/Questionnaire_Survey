@@ -92,7 +92,7 @@ public class CommonRequest {
         BaseCall.setHttpConfig(this.mConfig);
     }
 
-    private interface IRequestCallBack<T> {
+    public interface IRequestCallBack<T> {
         T success(String responseStr) throws Exception;
     }
 
@@ -139,7 +139,7 @@ public class CommonRequest {
     }
 
 
-    private static <T extends WinnerResponse> void basePostRequest(final Context context, String url, final long cacheTime, final Object tag, final Map<String, String> specificParams, final IDataCallBack<T> dataCallback, final IRequestCallBack<T> successCallBack) {
+    public static <T extends WinnerResponse> void basePostRequest(final Context context, String url, final long cacheTime, final Object tag, final Map<String, String> specificParams, final IDataCallBack<T> dataCallback, final IRequestCallBack<T> successCallBack) {
         //取缓存
         if (cacheTime > 0) {
             CacheEntity cache = getCache(cacheTime, specificParams);
@@ -201,89 +201,5 @@ public class CommonRequest {
         return cache;
     }
 
-
-    /**
-     * 登录
-     *
-     * @param context        上下文
-     * @param url            url地址
-     * @param tag            标识
-     * @param specificParams 参数
-     * @param callback       回调
-     */
-    public static void postLogin(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespStudent> callback) {
-        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespStudent>() {
-            @Override
-            public RespStudent success(String responseStr) throws Exception {
-                Type listType = new TypeToken<RespStudent>() {
-                }.getType();
-                Gson gson = new Gson();
-                RespStudent respStudent = gson.fromJson(responseStr, listType);
-                return respStudent;
-            }
-        });
-    }
-
-    /**
-     * 获取问卷类别集合
-     *
-     * @param context        上下文
-     * @param url            地址
-     * @param tag            标识
-     * @param specificParams 参数
-     * @param callback       回调
-     */
-    public static void postCategoryList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespCategoryList> callback) {
-        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespCategoryList>() {
-            @Override
-            public RespCategoryList success(String responseStr) throws Exception {
-                Type listType = new TypeToken<RespCategoryList>() {
-                }.getType();
-                Gson gson = new Gson();
-                RespCategoryList categoryList = gson.fromJson(responseStr, listType);
-                return categoryList;
-            }
-        });
-    }
-
-    /**
-     * 获取问卷集合
-     *
-     * @param context        上下文
-     * @param url            url地址
-     * @param tag            标识
-     * @param specificParams 参数
-     * @param callback       回调
-     */
-    public static void postQuestionnaireList(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQuestionnaireList> callback) {
-        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespQuestionnaireList>() {
-            @Override
-            public RespQuestionnaireList success(String responseStr) throws Exception {
-                Type listType = new TypeToken<RespQuestionnaireList>() {
-                }.getType();
-                Gson gson = new Gson();
-                RespQuestionnaireList questionnaireList = gson.fromJson(responseStr, listType);
-                return questionnaireList;
-            }
-        });
-    }
-
-    /**
-     * 获取某一问卷的问题和选项
-     *
-     * @param context 上下文
-     * @param url url地址
-     * @param tag 标识
-     * @param specificParams 参数集合
-     * @param callback 回调
-     */
-    public static void getQuestionAddOptions(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQueDetailObject> callback) {
-        basePostRequest(context, url, 0, tag, specificParams, callback, new IRequestCallBack<RespQueDetailObject>() {
-            @Override
-            public RespQueDetailObject success(String responseStr)  {
-                return parseObject(responseStr,RespQueDetailObject.class);
-            }
-        });
-    }
 
 }

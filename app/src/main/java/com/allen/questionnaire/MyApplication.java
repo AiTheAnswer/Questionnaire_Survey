@@ -21,7 +21,7 @@ public class MyApplication extends Application {
         super.onCreate();
         //初始化网络请求
         CommonRequest commonRequest = CommonRequest.getInstance();
-        commonRequest.init(this, "http://192.168.0.101:8089/questionnaire");
+        commonRequest.init(this, "http://192.168.2.109:8089/questionnaire");
     }
 
     /**

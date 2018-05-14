@@ -8,12 +8,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.adapter.ViewPagerAdapter;
 import com.allen.questionnaire.fragment.AnswerFragment;
 import com.allen.questionnaire.fragment.AnswerSheetFragment;
+import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
+import com.allen.questionnaire.service.model.Option;
 import com.allen.questionnaire.service.model.QuestionAddOptions;
 import com.allen.questionnaire.service.model.Questionnaire;
 import com.allen.questionnaire.service.model.RespQueDetail;
@@ -57,6 +60,9 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
     private String mToken = "";
     private List<Fragment> mFragments;
     private ViewPagerAdapter mAdapter;
+    private AnswerSheetFragment mSheetFragment;
+    //问题和问题选项以及用户选择选项的集合
+    private List<QuestionAddOptions> mQuesDetail;
     /**
      * 当前选择的页
      */
@@ -75,6 +81,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
         mImgBack.setOnClickListener(this);
         mTxtPreviousQuestion.setOnClickListener(this);
         mTxtNextQuestion.setOnClickListener(this);
+        mTxtCommitAnswer.setOnClickListener(this);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -146,7 +153,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         };
-        CommonRequest.getQuestionAddOptions(this, "/getQuestionDetails", this, params, callback);
+        ApiManager.getQuestionAddOptions(this, "/getQuestionDetails", this, params, callback);
     }
 
     /**
@@ -159,21 +166,19 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
         if (null == respQueDetail || null == respQueDetail.getQuesDetail() || respQueDetail.getQuesDetail().size() < 1) {
             return;
         }
-        List<QuestionAddOptions> quesDetail = respQueDetail.getQuesDetail();
-        for (int i = 0; i < quesDetail.size(); i++) {
-            QuestionAddOptions questionAddOptions = quesDetail.get(i);
+        mQuesDetail = respQueDetail.getQuesDetail();
+        for (int i = 0; i < mQuesDetail.size(); i++) {
+            QuestionAddOptions questionAddOptions = mQuesDetail.get(i);
             AnswerFragment answerFragment = new AnswerFragment();
-            String progress = formatProgress(i + 1, quesDetail.size());
+            String progress = formatProgress(i + 1, mQuesDetail.size());
             answerFragment.setData(progress, questionAddOptions);
             mFragments.add(answerFragment);
         }
         if (mFragments.size() > 0) {
             //添加选项卡
-            AnswerSheetFragment sheetFragment = new AnswerSheetFragment();
-            sheetFragment.setData(quesDetail);
-            mFragments.add(sheetFragment);
-            //设置初始问题类型 和当前进度
-            AnswerFragment fragment = (AnswerFragment) mFragments.get(0);
+            mSheetFragment = new AnswerSheetFragment();
+            mSheetFragment.setData(mQuesDetail);
+            mFragments.add(mSheetFragment);
         }
         mViewPager.setOffscreenPageLimit(mFragments.size());
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragments);
@@ -197,13 +202,30 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.img_back://返回按钮
                 finish();
                 break;
-            case R.id.txt_previous_question:
+            case R.id.txt_previous_question://前一个问题
                 mViewPager.setCurrentItem(mCurrentPage - 1);
                 break;
-            case R.id.txt_next_question:
+            case R.id.txt_next_question://下一个问题
                 mViewPager.setCurrentItem(mCurrentPage + 1);
                 break;
+            case R.id.txt_commit_answer://提交答案
+                commitAnswer();
+                break;
         }
+    }
+
+    /**
+     * 提交用户作答答案
+     */
+    private void commitAnswer() {
+        for (QuestionAddOptions questionAddOptions : mQuesDetail) {
+            List<Option> selectOptions = questionAddOptions.getQuestion().getSelectOptions();
+            if (null == selectOptions || selectOptions.size() < 1) {
+                Toast.makeText(this, "还有问题为作答，请作答后再提交", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
     }
 
     /**

@@ -16,6 +16,7 @@ import com.allen.questionnaire.R;
 import com.allen.questionnaire.activity.AnswerActivity;
 import com.allen.questionnaire.activity.HomeActivity;
 import com.allen.questionnaire.adapter.QuestionnaireListAdapter;
+import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.Category;
 import com.allen.questionnaire.service.model.Questionnaire;
@@ -107,7 +108,7 @@ public class QuestionnaireFragment extends Fragment {
                 mActivity.showToast(errorMessage);
             }
         };
-        CommonRequest.postQuestionnaireList(mActivity, "/getQuestionnaire", mActivity, params, callback);
+        ApiManager.postQuestionnaireList(mActivity, "/getQuestionnaire", mActivity, params, callback);
     }
 
     /**

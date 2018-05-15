@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -29,6 +31,10 @@ import okio.Buffer;
  */
 
 public class Util {
+    public static String HttpObjectParameters2Json(Map<String, Object> map) {
+        return JSON.toJSONString(map);
+    }
+
     public static JSONObject HttpParameters2Json(Map<String, String> map) {
         return new JSONObject(map);
     }

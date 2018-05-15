@@ -3,13 +3,17 @@ package com.allen.questionnaire.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.adapter.ViewPagerAdapter;
 import com.allen.questionnaire.fragment.AnswerFragment;
@@ -17,10 +21,13 @@ import com.allen.questionnaire.fragment.AnswerSheetFragment;
 import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.Option;
+import com.allen.questionnaire.service.model.QueRecordReq;
 import com.allen.questionnaire.service.model.QuestionAddOptions;
 import com.allen.questionnaire.service.model.Questionnaire;
 import com.allen.questionnaire.service.model.RespQueDetail;
 import com.allen.questionnaire.service.model.RespQueDetailObject;
+import com.allen.questionnaire.service.model.RespQueRecord;
+import com.allen.questionnaire.service.model.RespQueRecordList;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.allen.questionnaire.utils.SharedPreferenceUtils;
 
@@ -218,15 +225,71 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
      * 提交用户作答答案
      */
     private void commitAnswer() {
+        //先检测是否有未作答的问题
         for (QuestionAddOptions questionAddOptions : mQuesDetail) {
-            List<Option> selectOptions = questionAddOptions.getQuestion().getSelectOptions();
-            if (null == selectOptions || selectOptions.size() < 1) {
-                Toast.makeText(this, "还有问题为作答，请作答后再提交", Toast.LENGTH_SHORT).show();
+            List<Option> options = questionAddOptions.getQuestion().getSelectOptions();
+            if (null == options || options.size() < 1) {
+                final AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                View view = LayoutInflater.from(this).inflate(R.layout.dialog_view, null);
+                TextView dialogTitle = view.findViewById(R.id.dialog_title);
+                TextView dialogMessage = view.findViewById(R.id.dialog_message);
+                TextView dialogCancel = view.findViewById(R.id.dialog_cancel);
+                TextView dialogDetermine = view.findViewById(R.id.dialog_determine);
+                builder.setView(view);
+                dialog = builder.create();
+                dialogTitle.setVisibility(View.GONE);
+                dialogMessage.setText("你还有问题未作答，请作答后再提交");
+                dialogCancel.setVisibility(View.GONE);
+                dialogDetermine.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
                 return;
             }
         }
+        Map<String, Object> params = new HashMap<>();
+        List<QueRecordReq> recordReqs = new ArrayList<>();
+        for (QuestionAddOptions questionAddOptions : mQuesDetail) {
+            QueRecordReq queRecordReq = new QueRecordReq();
+            queRecordReq.setQuestionId(questionAddOptions.getQuestion().getId());
+            List<Option> selectOptions = questionAddOptions.getQuestion().getSelectOptions();
+            StringBuffer stringBuffer = new StringBuffer("");
+            for (Option selectOption : selectOptions) {
+                stringBuffer.append(selectOption.getId() + ",");
+            }
+            String optionIds = stringBuffer.substring(0, stringBuffer.length() - 1).toString();
+            queRecordReq.setOptionIds(optionIds);
+            recordReqs.add(queRecordReq);
+        }
+
+        params.put("userId", mToken);
+        params.put("questionnaireId", mQuestionnaire.getId());
+        params.put("queRecordingList", recordReqs);
+        IDataCallBack<RespQueRecordList> callback = new IDataCallBack<RespQueRecordList>() {
+            @Override
+            public void onSuccess(RespQueRecordList result) {
+                List<RespQueRecord> respQueRecordList = result.getRespQueRecordList();
+                if (null == respQueRecordList || respQueRecordList.size() < 1) {
+                    Toast.makeText(AnswerActivity.this, "提交失败，请重新提交", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AnswerActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
+                    AnswerActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                Toast.makeText(AnswerActivity.this, "提交失败： " + errorCode + "   errorMessage =  " + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        };
+        ApiManager.addQuestionnaireRecord("/recording/addRecordings", params, callback);
 
     }
+
 
     /**
      * 切换到下一个问题

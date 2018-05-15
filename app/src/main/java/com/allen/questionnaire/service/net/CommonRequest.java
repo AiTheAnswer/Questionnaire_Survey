@@ -158,7 +158,7 @@ public class CommonRequest {
         }
         final Request request;
         try {
-            Request.Builder builder = BaseBuilder.urlPostJSON(mUrl + url, commonParams(specificParams));
+            Request.Builder builder = BaseBuilder.urlPostJSON(mUrl + url, specificParams);
             builder.addHeader("Content-Type", "application/json");
             request = (null != tag) ? builder.tag(tag).build() : builder.build();
         } catch (WinnerException exception) {
@@ -201,5 +201,37 @@ public class CommonRequest {
         return cache;
     }
 
+
+    public static <T extends WinnerResponse> void basePostRequest(String url, final Map<String, Object> specificParams, final IDataCallBack<T> dataCallback, final IRequestCallBack<T> successCallBack) {
+        final Request request;
+        try {
+            Request.Builder builder = BaseBuilder.urlPostObjectJSON(mUrl + url, specificParams);
+            builder.addHeader("Content-Type", "application/json");
+            request = builder.build();
+        } catch (WinnerException exception) {
+            dataCallback.onError(exception.getErrorCode(), exception.getMessage());
+            return;
+        }
+        IHttpCallBack httpCallBack = new IHttpCallBack() {
+            public void onResponse(Response response) {
+                String responseStr;
+                try {
+                    responseStr = response.body().string();
+                    CommonRequest.delivery.postSuccess(dataCallback, successCallBack.success(responseStr));
+                } catch (Exception exception) {
+                    if (!TextUtils.isEmpty(exception.getMessage())) {
+                        CommonRequest.delivery.postError(1007, exception.getMessage(), dataCallback);
+                    } else {
+                        CommonRequest.delivery.postError(1007, "parse response json data error", dataCallback);
+                    }
+                }
+            }
+
+            public void onFailure(int errorCode, String errorMessage) {
+                CommonRequest.delivery.postError(errorCode, errorMessage, dataCallback);
+            }
+        };
+        BaseCall.doAsync(request, httpCallBack);
+    }
 
 }

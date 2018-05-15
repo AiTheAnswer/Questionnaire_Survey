@@ -85,6 +85,19 @@ public class BaseBuilder {
     }
 
 
+    public static Request.Builder urlPostObjectJSON(String url, Map<String, Object> specificParams) throws WinnerException {
+        if (TextUtils.isEmpty(url)) {
+            throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);
+        } else {
+            HttpUrl parsed = HttpUrl.parse(url);
+            if (parsed == null) {
+                throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_PARSE_ERROR);
+            }
+            String json = Util.HttpObjectParameters2Json(specificParams);
+            RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+            return (new Request.Builder()).url(url).post(requestBody);
+        }
+    }
     public static Request.Builder urlPostJSON(String url, Map<String, String> specificParams) throws WinnerException {
         if (TextUtils.isEmpty(url)) {
             throw WinnerException.getExceptionByErrorMessage(ERROR_MESSAGE.URL_EMPTY);

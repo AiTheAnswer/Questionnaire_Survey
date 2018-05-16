@@ -4,9 +4,9 @@
     android:layout_height="70dp"
     android:orientation="vertical"
     android:paddingBottom="10dp"
-    android:paddingTop="10dp"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
     <!-- 标题、是否使用-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,17 +22,23 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:textColor="@color/black_88000000"
+            android:textColor="@color/black"
             android:textSize="16sp" />
         <!-- 是否填写 -->
         <TextView
             android:id="@+id/txt_item_que_use"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:background="@drawable/use_shape"
             android:gravity="center"
-            android:text="已填写"
-            android:textSize="16sp" />
+            android:text="已作答"
+            android:textColor="@color/home_select"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -55,7 +61,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:text="使用次数: "
-                android:textColor="@color/home_un_select"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <TextView
@@ -63,8 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_toEndOf="@+id/txt_item_use_number_name"
-                android:textColor="@color/home_select"
                 android:gravity="bottom"
+                android:textColor="@color/home_select"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -80,7 +86,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:text="问题个数: "
-                android:textColor="@color/home_un_select"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
 
             <TextView

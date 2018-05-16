@@ -46,6 +46,7 @@ public class QuestionnairesFragment extends Fragment {
     private HomeActivity mActivity;
     private MyApplication myApplication;
     private List<Category> mCategoryList;
+    private List<String> mTitles;
     private List<Fragment> mFragments;
     private ViewPagerAdapter mAdapter;
 
@@ -67,6 +68,7 @@ public class QuestionnairesFragment extends Fragment {
         mActivity = (HomeActivity) getActivity();
         myApplication = (MyApplication) mActivity.getApplication();
         mFragments = new ArrayList<>();
+        mTitles = new ArrayList<>();
         getCategoryList();
     }
 
@@ -76,7 +78,6 @@ public class QuestionnairesFragment extends Fragment {
     private void getCategoryList() {
         Map<String, String> params = new HashMap<>();
         params.put("token", myApplication.getToken());
-
         IDataCallBack<RespCategoryList> callback = new IDataCallBack<RespCategoryList>() {
             @Override
             public void onSuccess(RespCategoryList result) {
@@ -114,9 +115,10 @@ public class QuestionnairesFragment extends Fragment {
             QuestionnaireFragment questionFragment = new QuestionnaireFragment();
             questionFragment.setData(category);
             mFragments.add(questionFragment);
+            mTitles.add(category.getCategoryName());
         }
         mAdapter = new ViewPagerAdapter(mActivity.getSupportFragmentManager(), mFragments);
-        mAdapter.setCategories(mCategoryList);
+        mAdapter.setTitles(mTitles);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }

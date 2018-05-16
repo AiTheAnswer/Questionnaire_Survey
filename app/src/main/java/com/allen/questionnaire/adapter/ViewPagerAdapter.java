@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.allen.questionnaire.service.model.Category;
 
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         this.mFragments = fragments;
     }
 
-    private List<Category> mCategories;
+    private List<String> mTitles;
 
-    public void setCategories(List<Category> categories) {
-        this.mCategories = categories;
+    public void setTitles(List<String> titles) {
+        this.mTitles = titles;
     }
 
     @Override
@@ -41,6 +40,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mCategories.get(position).getCategoryName();
+        if (null != mTitles) {
+            if (mTitles.size() > position) {
+                return mTitles.get(position);
+            }
+        }
+        return "";
     }
 }

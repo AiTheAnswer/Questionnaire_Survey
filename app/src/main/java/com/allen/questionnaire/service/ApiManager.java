@@ -139,11 +139,15 @@ public class ApiManager {
      * @param specificParams 参数集合
      * @param callback       回调
      */
-    public static void getQuestionnaireRecord(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQueRecordList> callback) {
-        CommonRequest.basePostRequest(context, url, 0, tag, specificParams, callback, new CommonRequest.IRequestCallBack<RespQueRecordList>() {
+    public static void getQuestionnaireRecord(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQuestionnaireList> callback) {
+        CommonRequest.basePostRequest(context, url, 0, tag, specificParams, callback, new CommonRequest.IRequestCallBack<RespQuestionnaireList>() {
             @Override
-            public RespQueRecordList success(String responseStr) {
-                return parseObject(responseStr, RespQueRecordList.class);
+            public RespQuestionnaireList success(String responseStr) {
+                Type listType = new TypeToken<RespQuestionnaireList>() {
+                }.getType();
+                Gson gson = new Gson();
+                RespQuestionnaireList questionnaireList = gson.fromJson(responseStr, listType);
+                return questionnaireList;
             }
         });
     }

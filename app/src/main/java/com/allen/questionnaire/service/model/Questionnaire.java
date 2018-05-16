@@ -18,7 +18,7 @@ public class Questionnaire implements Serializable{
     //问卷的问题个数
     private Integer questionNumber;
     //当前用户是否使用
-    private boolean isUse;
+    private boolean use;
     //当前问卷被使用个次数
     private Integer useNumber;
 
@@ -55,11 +55,11 @@ public class Questionnaire implements Serializable{
     }
 
     public boolean isUse() {
-        return isUse;
+        return use;
     }
 
     public void setUse(boolean use) {
-        isUse = use;
+        this.use = use;
     }
 
     public Integer getUseNumber() {

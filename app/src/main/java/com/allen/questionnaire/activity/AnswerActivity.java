@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ import com.allen.questionnaire.service.model.RespQueRecord;
 import com.allen.questionnaire.service.model.RespQueRecordList;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.allen.questionnaire.utils.SharedPreferenceUtils;
+import com.allen.questionnaire.view.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +48,7 @@ import static com.allen.questionnaire.utils.Constant.TOKEN;
  *
  * @author Renjy
  */
-public class AnswerActivity extends AppCompatActivity implements View.OnClickListener {
+public class AnswerActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.img_back)
     ImageView mImgBack;
@@ -75,14 +77,21 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
      */
     private int mCurrentPage = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initData();
         initListener();
     }
+
 
     private void initListener() {
         mImgBack.setOnClickListener(this);
@@ -157,7 +166,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onError(int errorCode, String errorMessage) {
-
+                Toast.makeText(AnswerActivity.this, "请求失败： errorCode = " + errorCode, Toast.LENGTH_SHORT).show();
             }
         };
         ApiManager.getQuestionAddOptions(this, "/getQuestionDetails", this, params, callback);

@@ -23,6 +23,7 @@ import com.allen.questionnaire.service.model.Questionnaire;
 import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.allen.questionnaire.utils.Constant;
+import com.allen.questionnaire.view.LoadingDialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,7 @@ public class QuestionnaireFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if(mCategory == null ){
+        if (mCategory == null) {
             return;
         }
         getQuestionList();
@@ -79,19 +80,19 @@ public class QuestionnaireFragment extends Fragment {
      * 获取当前类别下问卷列表
      */
     private void getQuestionList() {
+        LoadingDialog.showLoading(mActivity);
         Map<String, String> params = new HashMap<>();
         params.put(Constant.TOKEN, myApplication.getToken());
-        params.put("categoryId",  mCategory.getId()+"");
+        params.put("categoryId", mCategory.getId() + "");
         IDataCallBack<RespQuestionnaireList> callback = new IDataCallBack<RespQuestionnaireList>() {
             @Override
             public void onSuccess(RespQuestionnaireList result) {
+                LoadingDialog.dismissLoading();
                 if (null != result && result.OK()) {
                     List<Questionnaire> resultObject = result.getObject();
                     if (null != resultObject && resultObject.size() > 0) {
                         mQuestionnaireList = resultObject;
                         updateQuestionnaire();
-                    } else {
-                        //TODO 暂无数据
                     }
                 } else if (null != result && !TextUtils.isEmpty(result.getReason())) {
                     mActivity.showToast(result.getReason());
@@ -102,6 +103,7 @@ public class QuestionnaireFragment extends Fragment {
 
             @Override
             public void onError(int errorCode, String errorMessage) {
+                LoadingDialog.dismissLoading();
                 if (TextUtils.isEmpty(errorMessage)) {
                     errorMessage = Constant.NET_ERROR;
                 }
@@ -118,13 +120,14 @@ public class QuestionnaireFragment extends Fragment {
         mAdapter = new QuestionnaireListAdapter(mActivity, mQuestionnaireList);
         mListView.setAdapter(mAdapter);
     }
+
     private void initListener() {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Questionnaire questionnaire = mQuestionnaireList.get(position);
                 Intent intent = new Intent(getActivity(), AnswerActivity.class);
-                intent.putExtra("questionnaire",questionnaire);
+                intent.putExtra("questionnaire", questionnaire);
                 startActivity(intent);
 
             }

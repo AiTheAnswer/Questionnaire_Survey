@@ -20,6 +20,7 @@ import com.allen.questionnaire.service.model.Category;
 import com.allen.questionnaire.service.model.RespCategoryList;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.allen.questionnaire.utils.Constant;
+import com.allen.questionnaire.view.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,18 +77,18 @@ public class QuestionnairesFragment extends Fragment {
      * 获取问卷类别
      */
     private void getCategoryList() {
+        LoadingDialog.showLoading(mActivity);
         Map<String, String> params = new HashMap<>();
         params.put("token", myApplication.getToken());
         IDataCallBack<RespCategoryList> callback = new IDataCallBack<RespCategoryList>() {
             @Override
             public void onSuccess(RespCategoryList result) {
+                LoadingDialog.dismissLoading();
                 if (null != result && result.OK()) {
                     ArrayList<Category> resultObject = result.getObject();
                     if (null != resultObject && resultObject.size() > 0) {
                         mCategoryList = resultObject;
                         updateTab();
-                    } else {
-                        //TODO 暂无数据
                     }
                 } else if (null != result && !TextUtils.isEmpty(result.getReason())) {
                     mActivity.showToast(result.getReason());
@@ -98,6 +99,7 @@ public class QuestionnairesFragment extends Fragment {
 
             @Override
             public void onError(int errorCode, String errorMessage) {
+                LoadingDialog.dismissLoading();
                 if (TextUtils.isEmpty(errorMessage)) {
                     errorMessage = Constant.NET_ERROR;
                 }
@@ -121,6 +123,7 @@ public class QuestionnairesFragment extends Fragment {
         mAdapter.setTitles(mTitles);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(mTitles.size());
     }
 
     @Override

@@ -41,7 +41,7 @@ public class SelectCategoryPopupWindow extends PopupWindow {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mSelectedCategory = categoryList.get(position);
-                dissmiss();
+                dismiss();
             }
         });
         setFocusable(false);
@@ -67,10 +67,10 @@ public class SelectCategoryPopupWindow extends PopupWindow {
         showAtLocation(window.getDecorView(), Gravity.CENTER, 0, 0);
     }
 
-    public void dissmiss() {
+    public void dismiss() {
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.alpha = 1.0f;
         window.setAttributes(attributes);
-        dismiss();
+        super.dismiss();
     }
 }

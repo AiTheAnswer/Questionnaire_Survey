@@ -129,6 +129,7 @@ public class AnalysisFragment extends Fragment implements View.OnClickListener {
         mViewPager.setAdapter(mAdapter);
         mAdapter.setTitles(mTitles);
         mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(3);
     }
 
 
@@ -186,15 +187,29 @@ public class AnalysisFragment extends Fragment implements View.OnClickListener {
         Category category = new Category();
         category.setCategoryName("全部");
         category.setId(0);
-        categories.add(0,category);
+        categories.add(0, category);
         final SelectCategoryPopupWindow popupWindow = new SelectCategoryPopupWindow(mActivity, categories, selectedCategoryId);
         popupWindow.show();
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 Category selectedCategory = popupWindow.getSelectedCategory();
+                updateSelectCategory(selectedCategory);
             }
         });
+    }
+
+    /**
+     * 更新选择问卷对的类型
+     *
+     * @param selectedCategory 选择的类型
+     */
+    private void updateSelectCategory(Category selectedCategory) {
+        selectedCategoryId = selectedCategory.getId();
+        mTxtCategory.setText(selectedCategory.getCategoryName());
+        answeredFragment.setCategoryId(selectedCategoryId);
+        unAnsweredFragment.setCategoryId(selectedCategoryId);
+        allAnsweredFragment.setCategoryId(selectedCategoryId);
     }
 
     @Override

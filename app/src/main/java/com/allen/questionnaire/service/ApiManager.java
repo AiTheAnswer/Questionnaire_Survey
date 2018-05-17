@@ -7,6 +7,7 @@ import com.allen.questionnaire.service.model.RespCategoryList;
 import com.allen.questionnaire.service.model.RespQueDetailObject;
 import com.allen.questionnaire.service.model.RespQueRecord;
 import com.allen.questionnaire.service.model.RespQueRecordList;
+import com.allen.questionnaire.service.model.RespQueStatisticsList;
 import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.model.RespStudent;
 import com.allen.questionnaire.service.net.CommonRequest;
@@ -148,6 +149,25 @@ public class ApiManager {
                 Gson gson = new Gson();
                 RespQuestionnaireList questionnaireList = gson.fromJson(responseStr, listType);
                 return questionnaireList;
+            }
+        });
+    }
+    /**
+     * 获取某个问卷的统计分析数据
+     *
+     * @param url            url 地址
+     * @param specificParams 参数集合
+     * @param callback       回调
+     */
+    public static void getQueStatistics(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespQueStatisticsList> callback) {
+        CommonRequest.basePostRequest(context, url, 0, tag, specificParams, callback, new CommonRequest.IRequestCallBack<RespQueStatisticsList>() {
+            @Override
+            public RespQueStatisticsList success(String responseStr) {
+                Type listType = new TypeToken<RespQueStatisticsList>() {
+                }.getType();
+                Gson gson = new Gson();
+                RespQueStatisticsList statisticsList = gson.fromJson(responseStr, listType);
+                return statisticsList;
             }
         });
     }

@@ -1,8 +1,10 @@
 package com.allen.questionnaire.fragment;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +101,25 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         }
         mTxtUserName.setText(studentName);
         mTxtrStudentId.setText(String.format("%s: %s", "学号", studentId));
+        if (!TextUtils.isEmpty(getVersionCode())) {
+            mTxtVersionCode.setText(String.format("v %s", getVersionCode()));
+        }
+        mTxtTel.setText(String.format("%s", "400-995-6050"));
+    }
+
+    /**
+     * 获取版本名称
+     *
+     * @return 版本名称
+     */
+    private String getVersionCode() {
+        String versionName = "";
+        try {
+            versionName = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 
     @Override
@@ -127,7 +148,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 mActivity.showToast("暂无此功能，敬请期待");
                 break;
             case R.id.txt_fragment_me_exit://退出登录
-                preferenceUtils.setPreference(Constant.TOKEN,"");
+                preferenceUtils.setPreference(Constant.TOKEN, "");
                 mActivity.finish();
                 break;
         }

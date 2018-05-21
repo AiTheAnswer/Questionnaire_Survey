@@ -16,6 +16,9 @@ public class LoadingDialog {
     private static AlertDialog dialog;
 
     public static void showLoading(Context context) {
+        if (null == context) {
+            return;
+        }
         if (null != dialog) {
             dialog.dismiss();
         } else {

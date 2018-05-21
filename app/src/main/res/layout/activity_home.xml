@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:background="@color/home_select"
-        android:paddingLeft="25dp"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:layout_height="45dp" />

@@ -89,6 +89,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColor="@color/home_select"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
             android:textSize="16sp"
 
             />
@@ -128,6 +130,8 @@
             android:id="@+id/txt_fragment_me_tel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
             android:gravity="center_vertical"
             android:textColor="@color/home_select"
             android:textSize="16sp"

@@ -9,16 +9,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.RespStudent;
-import com.allen.questionnaire.service.net.CommonRequest;
+import com.allen.questionnaire.service.model.RespStudents;
+import com.allen.questionnaire.service.model.Student;
 import com.allen.questionnaire.utils.Constant;
 import com.allen.questionnaire.utils.SharedPreferenceUtils;
+import com.allen.questionnaire.view.StudentListPopupWindow;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -36,6 +41,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     ImageButton mBtnClearUserName;
     @BindView(R.id.login_clear_password)
     ImageButton mBtnClearPassword;
+    @BindView(R.id.img_login_icon)
+    ImageView mImgIcon;
     private SharedPreferenceUtils preferenceUtils;
     private String mToken;
 
@@ -61,6 +68,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mBtnLogin.setOnClickListener(this);
         mBtnClearUserName.setOnClickListener(this);
         mBtnClearPassword.setOnClickListener(this);
+        mImgIcon.setOnClickListener(this);
         mEdtUserName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -105,6 +113,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mBtnLogin.setOnClickListener(this);
     }
 
+    private int onClickIconCount = 0;
+    private long clickDate = 0;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -116,8 +127,67 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.btn_login://登录
                 doLogin();
+            case R.id.img_login_icon://应用图标，连续点击五次可显示所有学生列表
+                long currentTimeMillis = System.currentTimeMillis();
+                if (onClickIconCount == 5) {
+                    getAllStudents();
+                    clickDate = 0;
+                } else if (currentTimeMillis - clickDate < 500) {
+                    onClickIconCount++;
+                } else {
+                    onClickIconCount = 0;
+                }
+                clickDate = currentTimeMillis;
                 break;
         }
+    }
+
+    /**
+     * 获取所有的学生信息
+     */
+    private void getAllStudents() {
+        Map<String, String> params = new HashMap<>();
+
+        IDataCallBack<RespStudents> callback = new IDataCallBack<RespStudents>() {
+            @Override
+            public void onSuccess(RespStudents result) {
+                if (null != result && result.OK()) {
+                    List<Student> students = result.getObject();
+                    showStudentListPop(students);
+
+                } else if (null != result && null != result.getReason()) {
+                    showToast(result.getReason());
+                } else {
+                    showToast("网络请求失败");
+                }
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                if (TextUtils.isEmpty(errorMessage)) {
+                    errorMessage = "网络请求失败";
+                }
+                showToast(errorMessage);
+            }
+        };
+        ApiManager.postAllStudents(this, "/student/getAll", this, params, callback);
+    }
+
+    /**
+     * 显示所有学生信息列表的PopupWindow
+     */
+    private void showStudentListPop(List<Student> studentList) {
+        final StudentListPopupWindow popupWindow = new StudentListPopupWindow(this,studentList);
+        popupWindow.show();
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Student student = popupWindow.getSelectedStudent();
+                mEdtUserName.setText(student.getStudentId());
+                mEdtPassword.setText(student.getIdNumber());
+                doLogin();
+            }
+        });
     }
 
     /**

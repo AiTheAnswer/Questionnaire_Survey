@@ -10,6 +10,7 @@ import com.allen.questionnaire.service.model.RespQueRecordList;
 import com.allen.questionnaire.service.model.RespQueStatisticsList;
 import com.allen.questionnaire.service.model.RespQuestionnaireList;
 import com.allen.questionnaire.service.model.RespStudent;
+import com.allen.questionnaire.service.model.RespStudents;
 import com.allen.questionnaire.service.net.CommonRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,7 +27,27 @@ import static com.alibaba.fastjson.JSON.parseObject;
  * @author Renjy
  */
 public class ApiManager {
-
+    /**
+     * 登录
+     *
+     * @param context        上下文
+     * @param url            url地址
+     * @param tag            标识
+     * @param specificParams 参数
+     * @param callback       回调
+     */
+    public static void postAllStudents(Context context, String url, Object tag, Map<String, String> specificParams, final IDataCallBack<RespStudents> callback) {
+        CommonRequest.basePostRequest(context, url, 0, tag, specificParams, callback, new CommonRequest.IRequestCallBack<RespStudents>() {
+            @Override
+            public RespStudents success(String responseStr) throws Exception {
+                Type listType = new TypeToken<RespStudents>() {
+                }.getType();
+                Gson gson = new Gson();
+                RespStudents respStudents = gson.fromJson(responseStr, listType);
+                return respStudents;
+            }
+        });
+    }
     /**
      * 登录
      *

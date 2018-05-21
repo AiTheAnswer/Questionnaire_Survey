@@ -15,6 +15,7 @@ import com.allen.questionnaire.service.ApiManager;
 import com.allen.questionnaire.service.datatrasfer.IDataCallBack;
 import com.allen.questionnaire.service.model.RespStudent;
 import com.allen.questionnaire.service.net.CommonRequest;
+import com.allen.questionnaire.utils.Constant;
 import com.allen.questionnaire.utils.SharedPreferenceUtils;
 
 import java.util.HashMap;
@@ -36,7 +37,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.login_clear_password)
     ImageButton mBtnClearPassword;
     private SharedPreferenceUtils preferenceUtils;
-    private static final String TOKEN = "token";
     private String mToken;
 
     @Override
@@ -50,8 +50,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void initData() {
         preferenceUtils = SharedPreferenceUtils.getInstance(this);
-        mToken = preferenceUtils.getPreferenceString(TOKEN,"");
-        if(!TextUtils.isEmpty(mToken)){
+        mToken = preferenceUtils.getPreferenceString(Constant.TOKEN, "");
+        if (!TextUtils.isEmpty(mToken)) {
             showHomeActivity();
             finish();
         }
@@ -141,7 +141,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onSuccess(RespStudent result) {
                 if (null != result && result.OK()) {
-                    preferenceUtils.setPreference(TOKEN, result.getObject().getId());
+                    preferenceUtils.setPreference(Constant.TOKEN, result.getObject().getId());
+                    preferenceUtils.setPreference(Constant.USER_NAME, result.getObject().getName());
+                    preferenceUtils.setPreference(Constant.STUDENT_ID, result.getObject().getStudentId());
+                    preferenceUtils.setPreference(Constant.USER_SEX, result.getObject().getSex());//0: 男  1：女
                     showHomeActivity();
                     finish();
                 } else if (null != result && null != result.getReason()) {

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.allen.questionnaire.R;
 import com.allen.questionnaire.activity.AnswerActivity;
-import com.allen.questionnaire.adapter.AnswerGridAdapter;
+import com.allen.questionnaire.adapter.AnswerSheetGridAdapter;
 import com.allen.questionnaire.service.model.Question;
 import com.allen.questionnaire.service.model.QuestionAddOptions;
 
@@ -37,7 +37,7 @@ public class AnswerSheetFragment extends Fragment {
     private AnswerActivity activity;
     private List<QuestionAddOptions> mQuesDetail;
     private List<Question> questionList;
-    private AnswerGridAdapter mAdapter;
+    private AnswerSheetGridAdapter mAdapter;
 
     @Nullable
     @Override
@@ -76,7 +76,7 @@ public class AnswerSheetFragment extends Fragment {
         }
         setProgress();
         activity = (AnswerActivity) getActivity();
-        mAdapter = new AnswerGridAdapter(activity, questionList);
+        mAdapter = new AnswerSheetGridAdapter(activity, questionList);
         gridView.setAdapter(mAdapter);
     }
 

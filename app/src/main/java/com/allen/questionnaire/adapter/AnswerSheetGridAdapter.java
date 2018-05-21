@@ -13,12 +13,12 @@ import com.allen.questionnaire.service.model.Question;
 
 import java.util.List;
 
-public class AnswerGridAdapter extends BaseAdapter {
+public class AnswerSheetGridAdapter extends BaseAdapter {
     private Resources resources;
     private LayoutInflater mInflater;
     private List<Question> mQuestionList;
 
-    public AnswerGridAdapter(Context context, List<Question> questionList) {
+    public AnswerSheetGridAdapter(Context context, List<Question> questionList) {
         this.mInflater = LayoutInflater.from(context);
         resources = context.getResources();
         this.mQuestionList = questionList;

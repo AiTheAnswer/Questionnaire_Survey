@@ -116,7 +116,7 @@ public class SharedPreferenceUtils {
      * @param key 键
      * @return 键对应的值
      */
-    public Integer getPreferenceString(String key, Integer defaultValue) {
+    public Integer getPreferenceInteger(String key, Integer defaultValue) {
         if (sharedPreferences.contains(key)) {
             defaultValue = sharedPreferences.getInt(key, defaultValue);
         }
@@ -129,7 +129,7 @@ public class SharedPreferenceUtils {
      * @param key 键
      * @return 键对应的值
      */
-    public Float getPreferenceString(String key, Float defaultValue) {
+    public Float getPreferenceFloat(String key, Float defaultValue) {
         if (sharedPreferences.contains(key)) {
             defaultValue = sharedPreferences.getFloat(key, defaultValue);
         }
@@ -142,7 +142,7 @@ public class SharedPreferenceUtils {
      * @param key 键
      * @return 键对应的值
      */
-    public Long getPreferenceString(String key, Long defaultValue) {
+    public Long getPreferenceLong(String key, Long defaultValue) {
         if (sharedPreferences.contains(key)) {
             defaultValue = sharedPreferences.getLong(key, defaultValue);
         }

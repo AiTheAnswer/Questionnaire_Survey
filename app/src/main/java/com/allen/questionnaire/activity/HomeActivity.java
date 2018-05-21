@@ -123,7 +123,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case TYPE_ME://我
                 fragmentTransaction.show(meFragment);
-                mTxtTitle.setVisibility(View.GONE);
+                mTxtTitle.setText("我的");
+                mTxtTitle.setVisibility(View.VISIBLE);
                 break;
             default:
                 fragmentTransaction.show(questionnaireFragment);
